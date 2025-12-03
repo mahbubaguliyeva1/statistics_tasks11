@@ -3,202 +3,130 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SDE Simulation – Euler–Maruyama</title>
+    <title>SDE Simulator – Euler–Maruyama</title>
 
     <!-- MathJax for formulas -->
     <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
-    <script id="MathJax-script" async
-        src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js">
-    </script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
 
     <style>
-        body {
-            font-family: "Segoe UI", Arial, sans-serif;
-            background: #fafafa;
-            margin: 0;
-            padding: 0;
-            line-height: 1.6;
-        }
-
-        header {
-            background: #0e3b5f;
-            padding: 40px 20px;
-            color: white;
-            text-align: center;
-        }
-
-        .container {
-            max-width: 900px;
-            margin: 40px auto;
-            background: white;
-            border-radius: 10px;
-            padding: 30px;
-            box-shadow: 0 3px 12px rgba(0,0,0,0.1);
-        }
-
-        h2 {
-            color: #0e3b5f;
-        }
-
-        pre {
-            background: #f0f0f0;
-            padding: 12px;
-            border-radius: 6px;
-            overflow-x: auto;
-        }
-
-        canvas {
-            width: 100%;
-            height: 300px;
-            background: #fff;
-            border-radius: 10px;
-            margin-top: 20px;
-            border: 1px solid #ccc;
-        }
-
-        button {
-            padding: 10px 20px;
-            background: #0e3b5f;
-            color: white;
-            border: none;
-            border-radius: 6px;
-            cursor: pointer;
-            transition: 0.2s;
-            margin-top: 10px;
-        }
-
-        button:hover {
-            background: #155a8a;
-        }
-
-        footer {
-            text-align: center;
-            background: #0e3b5f;
-            color: white;
-            padding: 20px;
-            margin-top: 40px;
-        }
+        body { font-family: 'Segoe UI', Arial, sans-serif; background: #fafafa; margin:0; padding:0; line-height:1.6; }
+        header { background: #0e3b5f; color: white; padding: 40px 20px; text-align:center; }
+        .container { max-width: 900px; margin: 40px auto; background: white; padding: 30px; border-radius: 10px; box-shadow:0 3px 12px rgba(0,0,0,0.1); }
+        h2 { color:#0e3b5f; }
+        pre { background:#f0f0f0; padding:12px; border-radius:6px; overflow-x:auto; }
+        canvas { width:100%; height:300px; background:#fff; border-radius:10px; margin-top:20px; border:1px solid #ccc; }
+        button { padding:10px 20px; background:#0e3b5f; color:white; border:none; border-radius:6px; cursor:pointer; transition:0.2s; margin-top:10px; }
+        button:hover { background:#155a8a; }
+        footer { text-align:center; background:#0e3b5f; color:white; padding:20px; margin-top:40px; }
     </style>
 </head>
-
 <body>
 
 <header>
     <h1>Stochastic Differential Equation Simulation</h1>
-    <p>Euler–Maruyama · Wiener Process · Examples</p>
+    <p>Euler–Maruyama Method · Detailed Explanation · Interactive Examples</p>
 </header>
 
 <div class="container">
 
-    <h2>1. Euler–Maruyama Method</h2>
-    <p>The Euler–Maruyama update formula for an SDE:</p>
+<h2>1. What is the Euler–Maruyama Theorem?</h2>
+<p>The Euler–Maruyama theorem describes the method used to numerically solve stochastic differential equations (SDEs) of the form:</p>
+<p style="text-align:center;">$$ dX_t = a(X_t,t)\,dt + b(X_t,t)\,dW_t $$</p>
+<p>Here, <strong>W(t)</strong> represents a Wiener process (Brownian motion), <strong>a(x,t)</strong> is the drift, and <strong>b(x,t)</strong> is the diffusion. The method provides a discrete approximation for simulating paths of stochastic processes.</p>
 
-    <p style="text-align:center;">
-        $$ X_{n+1} = X_n + a(X_n, t_n)\Delta t + b(X_n, t_n)\Delta W_n $$
-    </p>
+<h2>2. How it works</h2>
+<p>The Euler–Maruyama method approximates the SDE solution at discrete time steps:</p>
+<p style="text-align:center;">$$ X_{n+1} = X_n + a(X_n,t_n)\Delta t + b(X_n,t_n)\Delta W_n, \quad \Delta W_n \sim N(0, \Delta t) $$</p>
+<p>This formula is analogous to the Euler method for ordinary differential equations but includes the stochastic term.</p>
 
-    <h2>2. Example: Wiener Process Simulation (in Browser)</h2>
+<h2>3. Why it is used</h2>
+<ul>
+<li><strong>Simplicity:</strong> Easy to implement for many SDEs.</li>
+<li><strong>Monte Carlo simulations:</strong> Efficiently generate multiple random paths.</li>
+<li><strong>Educational:</strong> Helps understand stochastic processes and their behavior.</li>
+<li><strong>Baseline method:</strong> Serves as a reference for more advanced methods like Milstein.</li>
+</ul>
 
-    <p>
-        A Wiener process satisfies the SDE:
-    </p>
+<h2>4. Where it is seen in real life</h2>
+<ul>
+<li><strong>Finance:</strong> Simulating stock prices, option pricing (Black–Scholes model), stochastic volatility.</li>
+<li><strong>Physics:</strong> Modeling Brownian motion, particle dynamics, thermal fluctuations.</li>
+<li><strong>Biology:</strong> Neuronal firing, population dynamics with noise, gene expression models.</li>
+<li><strong>Engineering:</strong> Systems with sensor noise, control systems, signal processing.</li>
+</ul>
 
-    <p style="text-align:center;">
-        $$ dW_t = dW_t $$
-    </p>
+<h2>5. Interactive Wiener Process Simulation</h2>
+<p>Click the button below to simulate a Brownian motion path using Euler–Maruyama.</p>
+<button onclick="simulateWiener()">Run Simulation</button>
+<canvas id="canvas"></canvas>
 
-    <p>
-        Click the button below to run a **live Brownian motion simulation** using the Euler–Maruyama method.
-    </p>
+<script>
+function simulateWiener() {
+    const canvas = document.getElementById('canvas');
+    const ctx = canvas.getContext('2d');
+    canvas.width = canvas.clientWidth;
+    canvas.height = canvas.clientHeight;
 
-    <!-- Run Simulation Button -->
-    <button onclick="simulateWiener()">Run Wiener Simulation</button>
+    const N = 1000;
+    const T = 1.0;
+    const dt = T / N;
+    let W = [0];
+    for (let i=1;i<=N;i++) {
+        let dW = Math.sqrt(dt)*randn_bm();
+        W.push(W[i-1]+dW);
+    }
 
-    <!-- Plot Canvas -->
-    <canvas id="canvas"></canvas>
+    let minW = Math.min(...W);
+    let maxW = Math.max(...W);
 
-    <script>
-        function simulateWiener() {
-            const canvas = document.getElementById("canvas");
-            const ctx = canvas.getContext("2d");
+    ctx.clearRect(0,0,canvas.width,canvas.height);
+    ctx.beginPath();
+    ctx.strokeStyle='#0e3b5f';
+    ctx.lineWidth=2;
 
-            canvas.width = canvas.clientWidth;
-            canvas.height = canvas.clientHeight;
+    for (let i=0;i<W.length;i++) {
+        let x = (i/N)*canvas.width;
+        let y = canvas.height - ((W[i]-minW)/(maxW-minW))*canvas.height;
+        if(i===0) ctx.moveTo(x,y);
+        else ctx.lineTo(x,y);
+    }
+    ctx.stroke();
+}
 
-            const N = 1000;
-            const T = 1.0;
-            const dt = T / N;
+// Generate standard normal random variable
+function randn_bm() {
+    let u=0,v=0;
+    while(u===0) u=Math.random();
+    while(v===0) v=Math.random();
+    return Math.sqrt(-2.0*Math.log(u)) * Math.cos(2.0*Math.PI*v);
+}
+</script>
 
-            let W = [0];
-            for (let i = 1; i <= N; i++) {
-                let dW = Math.sqrt(dt) * (Math.random() * 2 - 1); // simple normal-ish
-                W.push(W[i - 1] + dW);
-            }
-
-            // Find min, max
-            let minW = Math.min(...W);
-            let maxW = Math.max(...W);
-
-            ctx.clearRect(0, 0, canvas.width, canvas.height);
-            ctx.beginPath();
-            ctx.strokeStyle = "#0e3b5f";
-            ctx.lineWidth = 2;
-
-            for (let i = 0; i < W.length; i++) {
-                let x = (i / N) * canvas.width;
-                let y = canvas.height - ((W[i] - minW) / (maxW - minW)) * canvas.height;
-
-                if (i === 0) ctx.moveTo(x, y);
-                else ctx.lineTo(x, y);
-            }
-
-            ctx.stroke();
-        }
-    </script>
-
-    <h2>3. Python Version of Wiener Simulation</h2>
-    <pre>
+<h2>6. Python Examples</h2>
+<p>Simulate Wiener process:</p>
+<pre>
 import numpy as np
 import matplotlib.pyplot as plt
 
 T = 1.0
 N = 2000
-dt = T / N
+dt = T/N
 
 dW = np.sqrt(dt) * np.random.randn(N)
 W = np.concatenate(([0], np.cumsum(dW)))
-
 plt.plot(W)
-plt.title("Wiener Process (Brownian Motion)")
+plt.title("Wiener Process")
 plt.xlabel("Step")
 plt.ylabel("W(t)")
 plt.grid(True)
 plt.show()
-    </pre>
+</pre>
 
-    <h2>4. General Euler–Maruyama Solver (Python)</h2>
-    <pre>
-def euler_maruyama(a, b, x0, T=1.0, N=1000):
-    import numpy as np
-    dt = T / N
-    t = np.linspace(0, T, N + 1)
-    x = np.zeros(N + 1)
-    x[0] = x0
-
-    for n in range(N):
-        dW = np.sqrt(dt) * np.random.randn()
-        x[n+1] = x[n] + a(x[n], t[n]) * dt + b(x[n], t[n]) * dW
-
-    return t, x
-    </pre>
+<h2>7. Conclusion</h2>
+<p>The Euler–Maruyama theorem provides a fundamental, easy-to-use method to simulate stochastic differential equations. It helps visualize stochastic behavior, estimate expected values, and is widely applied across finance, physics, biology, and engineering.</p>
 
 </div>
-
-<footer>
-    © 2025 SDE Simulation Blog – Interactive Version
-</footer>
-
+<footer>© 2025 SDE Simulator – Interactive & Detailed Tutorial</footer>
 </body>
 </html>
-
-
