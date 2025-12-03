@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SDE Simulator — Euler–Maruyama Method</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background: #f5f5f5;
+            line-height: 1.6;
+        }
+        header {
+            background: #333;
+            color: white;
+            padding: 20px;
+            text-align: center;
+        }
+        .container {
+            max-width: 900px;
+            margin: auto;
+            padding: 20px;
+            background: white;
+        }
+        code, pre {
+            background: #eee;
+            padding: 10px;
+            border-radius: 5px;
+            display: block;
+            overflow-x: auto;
+        }
+        h2 {
+            border-left: 5px solid #333;
+            padding-left: 10px;
+        }
+        .footer {
+            margin-top: 40px;
+            padding: 20px;
+            text-align: center;
+            background: #333;
+            color: white;
+        }
+        .btn {
+            display: inline-block;
+            background: #333;
+            padding: 10px 20px;
+            color: white;
+            border-radius: 5px;
+            margin-top: 10px;
+            text-decoration: none;
+        }
+        .btn:hover {
+            background: #555;
+        }
+    </style>
+</head>
+<body>
+
+<header>
+    <h1>SDE Simulator — Euler–Maruyama</h1>
+    <p>Wiener Process, OU Process, Geometric Brownian Motion</p>
+</header>
+
+<div class="container">
+
+    <h2>📘 Overview</h2>
+    <p>
+        This website explains how to simulate stochastic differential equations (SDEs)
+        using the <strong>Euler–Maruyama method</strong>.  
+        Python code is provided for:
+    </p>
+
+    <ul>
+        <li>Wiener Process (Brownian Motion)</li>
+        <li>General SDE Solver</li>
+        <li>Ornstein–Uhlenbeck Process</li>
+        <li>Geometric Brownian Motion</li>
+    </ul>
+
+    <a class="btn" href="https://github.com/YOUR_USERNAME/YOUR_REPOSITORY" target="_blank">
+        View GitHub Repository
+    </a>
+
+    <hr>
+
+    <h2>📌 Euler–Maruyama Formula</h2>
+
+    <p>The Euler–Maruyama scheme approximates the SDE</p>
+
+    <pre>dX = a(X,t) dt + b(X,t) dW</pre>
+
+    <p>using the update rule:</p>
+
+    <pre>X[n+1] = X[n] + a(X[n], t[n]) * dt + b(X[n], t[n]) * sqrt(dt) * N(0,1)</pre>
+
+    <hr>
+
+    <h2>🟦 Example 1 — Wiener Process (Brownian Motion)</h2>
+
+    <pre><code>
+import numpy as np
+import matplotlib.pyplot as plt
+
+def wiener_process(T=1.0, N=1000):
+    dt = T / N
+    dW = np.sqrt(dt) * np.random.randn(N)
+    W = np.zeros(N+1)
+    W[1:] = np.cumsum(dW)
+    return W, dt
+
+W, dt = wiener_process(T=1, N=2000)
+plt.plot(W)
+plt.title("Wiener Process")
+plt.show()
+    </code></pre>
+
+    <hr>
+
+    <h2>🟩 Example 2 — General SDE Solver</h2>
+
+    <pre><code>
+def euler_maruyama(a, b, x0, T=1.0, N=1000):
+    dt = T / N
+    t = np.linspace(0, T, N+1)
+    x = np.zeros(N+1)
+    x[0] = x0
+
+    for n in range(N):
+        dW = np.sqrt(dt) * np.random.randn()
+        x[n+1] = x[n] + a(x[n], t[n]) * dt + b(x[n], t[n]) * dW
+    return t, x
+    </code></pre>
+
+    <hr>
+
+    <h2>🟧 Example 3 — Ornstein–Uhlenbeck Process</h2>
+
+    <pre><code>
+theta = 2.0
+mu = 1.0
+sigma = 0.3
+
+a = lambda x, t: theta * (mu - x)
+b = lambda x, t: sigma
+
+t, X = euler_maruyama(a, b, x0=0)
+plt.plot(t, X)
+plt.title("Ornstein–Uhlenbeck Process")
+plt.show()
+    </code></pre>
+
+    <hr>
+
+    <h2>🟨 Example 4 — Geometric Brownian Motion</h2>
+
+    <pre><code>
+mu = 0.1
+sigma = 0.3
+
+a = lambda x, t: mu * x
+b = lambda x, t: sigma * x
+
+t, X = euler_maruyama(a, b, x0=1)
+plt.plot(t, X)
+plt.title("Geometric Brownian Motion")
+plt.show()
+    </code></pre>
+
+</div>
+
+<div class="footer">
+    © 2025 SDE Simulator — Created for learning and experimentation.
+</div>
+
+</body>
+</html>
+
