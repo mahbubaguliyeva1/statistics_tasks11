@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SDE Simulation – Euler–Maruyama Method</title>
+    <title>SDE Simulation – Euler–Maruyama</title>
 
     <!-- MathJax for formulas -->
     <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
@@ -13,47 +13,70 @@
 
     <style>
         body {
-            font-family: "Segoe UI", Roboto, Arial, sans-serif;
+            font-family: "Segoe UI", Arial, sans-serif;
             background: #fafafa;
             margin: 0;
             padding: 0;
-            line-height: 1.7;
-            color: #222;
+            line-height: 1.6;
         }
+
         header {
             background: #0e3b5f;
-            color: white;
             padding: 40px 20px;
+            color: white;
             text-align: center;
         }
-        header h1 {
-            margin: 0;
-            font-size: 2.4rem;
-        }
+
         .container {
             max-width: 900px;
             margin: 40px auto;
             background: white;
-            padding: 30px;
             border-radius: 10px;
-            box-shadow: 0 3px 12px rgba(0,0,0,0.08);
+            padding: 30px;
+            box-shadow: 0 3px 12px rgba(0,0,0,0.1);
         }
+
         h2 {
             color: #0e3b5f;
-            margin-top: 40px;
         }
+
         pre {
             background: #f0f0f0;
-            padding: 15px;
+            padding: 12px;
             border-radius: 6px;
             overflow-x: auto;
         }
-        footer {
-            margin-top: 40px;
-            padding: 20px;
+
+        canvas {
+            width: 100%;
+            height: 300px;
+            background: #fff;
+            border-radius: 10px;
+            margin-top: 20px;
+            border: 1px solid #ccc;
+        }
+
+        button {
+            padding: 10px 20px;
             background: #0e3b5f;
             color: white;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: 0.2s;
+            margin-top: 10px;
+        }
+
+        button:hover {
+            background: #155a8a;
+        }
+
+        footer {
             text-align: center;
+            background: #0e3b5f;
+            color: white;
+            padding: 20px;
+            margin-top: 40px;
         }
     </style>
 </head>
@@ -62,60 +85,22 @@
 
 <header>
     <h1>Stochastic Differential Equation Simulation</h1>
-    <p>Euler–Maruyama Method · Wiener Process · OU Process · GBM</p>
+    <p>Euler–Maruyama · Wiener Process · Examples</p>
 </header>
 
 <div class="container">
 
-    <h2>1. Introduction</h2>
-
-    <p>
-        This page explains how to simulate stochastic differential equations (SDEs) 
-        using the <strong>Euler–Maruyama method</strong>. We begin with the 
-        Wiener process (Brownian motion) and then show more advanced examples.
-    </p>
-
-    <h2>2. What is an SDE?</h2>
-
-    <p>
-        A stochastic differential equation has the form:
-    </p>
+    <h2>1. Euler–Maruyama Method</h2>
+    <p>The Euler–Maruyama update formula for an SDE:</p>
 
     <p style="text-align:center;">
-        $$ dX_t = a(X_t,t)\,dt + b(X_t,t)\,dW_t $$
+        $$ X_{n+1} = X_n + a(X_n, t_n)\Delta t + b(X_n, t_n)\Delta W_n $$
     </p>
+
+    <h2>2. Example: Wiener Process Simulation (in Browser)</h2>
 
     <p>
-        where:
-        <ul>
-            <li>\( a(X_t,t) \) is the drift term</li>
-            <li>\( b(X_t,t) \) is the diffusion term</li>
-            <li>\( W_t \) is a Wiener process</li>
-        </ul>
-    </p>
-
-    <h2>3. Euler–Maruyama Method</h2>
-
-    <p>
-        The numerical approximation uses:
-    </p>
-
-    <p style="text-align:center;">
-        $$ X_{n+1} = X_n + a(X_n,t_n)\Delta t + b(X_n,t_n)\Delta W_n $$
-    </p>
-
-    <p>
-        where:
-    </p>
-
-    <p style="text-align:center;">
-        $$ \Delta W_n \sim \mathcal{N}(0, \Delta t). $$
-    </p>
-
-    <h2>4. Example: Wiener Process (Brownian Motion)</h2>
-
-    <p>
-        A Wiener process satisfies:
+        A Wiener process satisfies the SDE:
     </p>
 
     <p style="text-align:center;">
@@ -123,10 +108,55 @@
     </p>
 
     <p>
-        which means drift \( a=0 \) and diffusion \( b=1 \).  
-        Simulation code:
+        Click the button below to run a **live Brownian motion simulation** using the Euler–Maruyama method.
     </p>
 
+    <!-- Run Simulation Button -->
+    <button onclick="simulateWiener()">Run Wiener Simulation</button>
+
+    <!-- Plot Canvas -->
+    <canvas id="canvas"></canvas>
+
+    <script>
+        function simulateWiener() {
+            const canvas = document.getElementById("canvas");
+            const ctx = canvas.getContext("2d");
+
+            canvas.width = canvas.clientWidth;
+            canvas.height = canvas.clientHeight;
+
+            const N = 1000;
+            const T = 1.0;
+            const dt = T / N;
+
+            let W = [0];
+            for (let i = 1; i <= N; i++) {
+                let dW = Math.sqrt(dt) * (Math.random() * 2 - 1); // simple normal-ish
+                W.push(W[i - 1] + dW);
+            }
+
+            // Find min, max
+            let minW = Math.min(...W);
+            let maxW = Math.max(...W);
+
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            ctx.beginPath();
+            ctx.strokeStyle = "#0e3b5f";
+            ctx.lineWidth = 2;
+
+            for (let i = 0; i < W.length; i++) {
+                let x = (i / N) * canvas.width;
+                let y = canvas.height - ((W[i] - minW) / (maxW - minW)) * canvas.height;
+
+                if (i === 0) ctx.moveTo(x, y);
+                else ctx.lineTo(x, y);
+            }
+
+            ctx.stroke();
+        }
+    </script>
+
+    <h2>3. Python Version of Wiener Simulation</h2>
     <pre>
 import numpy as np
 import matplotlib.pyplot as plt
@@ -146,8 +176,7 @@ plt.grid(True)
 plt.show()
     </pre>
 
-    <h2>5. General Euler–Maruyama Solver</h2>
-
+    <h2>4. General Euler–Maruyama Solver (Python)</h2>
     <pre>
 def euler_maruyama(a, b, x0, T=1.0, N=1000):
     import numpy as np
@@ -158,66 +187,18 @@ def euler_maruyama(a, b, x0, T=1.0, N=1000):
 
     for n in range(N):
         dW = np.sqrt(dt) * np.random.randn()
-        x[n+1] = x[n] + a(x[n], t[n])*dt + b(x[n], t[n])*dW
+        x[n+1] = x[n] + a(x[n], t[n]) * dt + b(x[n], t[n]) * dW
 
     return t, x
-    </pre>
-
-    <h2>6. Example: Ornstein–Uhlenbeck Process</h2>
-
-    <p>
-        Defined by:
-    </p>
-
-    <p style="text-align:center;">
-        $$ dX_t = \theta(\mu - X_t)\,dt + \sigma\,dW_t $$
-    </p>
-
-    <pre>
-theta = 2.0
-mu = 1.0
-sigma = 0.3
-
-a = lambda x, t: theta * (mu - x)
-b = lambda x, t: sigma
-
-t, X = euler_maruyama(a, b, x0=0)
-
-plt.plot(t, X)
-plt.title("Ornstein–Uhlenbeck Process")
-plt.show()
-    </pre>
-
-    <h2>7. Example: Geometric Brownian Motion (Finance)</h2>
-
-    <p>
-        The famous Black–Scholes model:
-    </p>
-
-    <p style="text-align:center;">
-        $$ dX_t = \mu X_t\,dt + \sigma X_t\,dW_t $$
-    </p>
-
-    <pre>
-mu = 0.1
-sigma = 0.3
-
-a = lambda x, t: mu * x
-b = lambda x, t: sigma * x
-
-t, X = euler_maruyama(a, b, x0=1)
-
-plt.plot(t, X)
-plt.title("Geometric Brownian Motion")
-plt.show()
     </pre>
 
 </div>
 
 <footer>
-    © 2025 SDE Simulation Blog · Euler–Maruyama Tutorial
+    © 2025 SDE Simulation Blog – Interactive Version
 </footer>
 
 </body>
 </html>
+
 
